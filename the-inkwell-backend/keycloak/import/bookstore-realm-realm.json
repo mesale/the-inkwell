@@ -1,0 +1,95 @@
+{
+  "realm": "bookstore-realm",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "loginTheme": "readbooks",
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "roles": {
+    "realm": [
+      { "name": "ROLE_USER", "description": "Standard authenticated customer" },
+      { "name": "ROLE_ADMIN", "description": "Platform administrator" },
+      { "name": "ROLE_STORE_ADMIN", "description": "Store owner / store administrator" },
+      { "name": "ROLE_WORKER", "description": "Store employee / worker" },
+      { "name": "ROLE_EMPLOYEE", "description": "Store employee (alias role)" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "bookstore-frontend",
+      "name": "Bookstore Frontend (React / Vite)",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "rootUrl": "http://localhost:5173",
+      "baseUrl": "http://localhost:5173",
+      "redirectUris": [
+        "http://localhost:5173/*"
+      ],
+      "webOrigins": [
+        "http://localhost:5173"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:5173/*"
+      }
+    },
+    {
+      "clientId": "bookstore-backend",
+      "name": "Bookstore Backend (admin service account)",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "local-dev-backend-secret",
+      "clientAuthenticatorType": "client-secret",
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true
+    }
+  ],
+  "users": [
+    {
+      "username": "service-account-bookstore-backend",
+      "enabled": true,
+      "serviceAccountClientId": "bookstore-backend",
+      "clientRoles": {
+        "realm-management": ["realm-admin"]
+      }
+    },
+    {
+      "username": "admin@bookstore.local",
+      "email": "admin@bookstore.local",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Platform",
+      "lastName": "Admin",
+      "credentials": [
+        { "type": "password", "value": "Admin123!", "temporary": false }
+      ],
+      "realmRoles": ["ROLE_ADMIN", "ROLE_USER"]
+    },
+    {
+      "username": "user@bookstore.local",
+      "email": "user@bookstore.local",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Test",
+      "lastName": "User",
+      "credentials": [
+        { "type": "password", "value": "User123!", "temporary": false }
+      ],
+      "realmRoles": ["ROLE_USER"]
+    }
+  ]
+}
